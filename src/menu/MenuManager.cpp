@@ -1,7 +1,6 @@
 #include "MenuManager.h"
 
-#include "implementations/MenuA.h"
-// #include "implementations/MenuBattery.h"
+#include "implementations/MenuBattery.h"
 #include "../Definitions.h"
 #include "../io/Button.h"
 #include "../io/DisplayManager.h"
@@ -49,6 +48,5 @@ void MenuManager::wakeUp() {
 	buttonRight.loop();
 	buttonConfirm.loop();
 	
-	// menu = new MenuBattery();
-	menu = new MenuA();
+	menu = new MenuBattery();
 }

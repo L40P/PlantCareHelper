@@ -35,5 +35,5 @@ void loop() {
 	
 	// _printRAM
 	
-	delay(500);
+	// delay(500);
 }
