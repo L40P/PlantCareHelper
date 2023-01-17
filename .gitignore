@@ -1,0 +1,6 @@
+# ignore ide files
+/.pio/
+/.vscode/
+
+# ignore build files
+/build/
