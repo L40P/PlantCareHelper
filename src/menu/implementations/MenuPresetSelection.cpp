@@ -1,9 +1,8 @@
 #include "MenuPresetSelection.h"
 
-#include "MenuA.h"
 // #include "MenuPresetEdit.h"
 #include "MenuPresetDisplay.h"
-// #include "MenuSettingSelection.h"
+#include "MenuSettingSelection.h"
 #include "../MenuManager.h"
 #include "../../io/DisplayManager.h"
 #include "../../data/PresetManager.h"
@@ -47,8 +46,7 @@ MenuPresetSelection::~MenuPresetSelection() {
 void MenuPresetSelection::loop(const Button::State& buttonStateUp, const Button::State& buttonStateDown, const Button::State& buttonStateLeft, const Button::State& buttonStateRight, const Button::State& buttonStateConfirm) {
 	if(buttonStateLeft == Button::State::RISING_EDGE || buttonStateRight == Button::State::RISING_EDGE) {
 		delete this;
-		// MenuManager::menu = new MenuSettingSelection();
-		MenuManager::menu = new MenuA();
+		MenuManager::menu = new MenuSettingSelection();
 	}
 	else if(buttonStateUp == Button::State::RISING_EDGE) {
 		if(presets[0]) {
@@ -84,9 +82,8 @@ void MenuPresetSelection::loop(const Button::State& buttonStateUp, const Button:
 					break;
 				
 				case ConfirmAction::MENU_EDIT:
-					delete this;
+					// delete this;
 					// MenuManager::menu = new MenuPresetEdit(p, index);
-					MenuManager::menu = new MenuA();
 					break;
 			}
 		}
