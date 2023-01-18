@@ -1,7 +1,5 @@
 #include "Preset.h"
 
-#include "../io/StringHelper.h"
-
 Preset::Preset(const char* name, const char& humidityMin, const char& humidityMax, const char& moistureMin, const char& moistureMax) : name(DISPLAY_COLUMNS, ' '), humidityMin(humidityMin), humidityMax(humidityMax), moistureMin(moistureMin), moistureMax(moistureMax) {
 	for(unsigned int i = 0; i < DISPLAY_COLUMNS && name[i] != '\0'; i++) {
 		this->name[i] = name[i];
@@ -53,24 +51,4 @@ unsigned char* Preset::toBytes(const Preset* preset) {
 	bytes[i++] = preset->moistureMax;
 	
 	return bytes;
-}
-
-const std::string Preset::toString(const Preset* preset) {
-	std::string s = "Preset(";
-	
-	if(preset) {
-		s += preset->name;
-		s += ", ";
-		s += StringHelper::toString(preset->humidityMin);
-		s += ", ";
-		s += StringHelper::toString(preset->humidityMax);
-		s += ", ";
-		s += StringHelper::toString(preset->moistureMin);
-		s += ", ";
-		s += StringHelper::toString(preset->moistureMax);
-	}
-	
-	s += ")";
-	
-	return s;
 }

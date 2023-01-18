@@ -1,27 +1,19 @@
 #include "MenuPresetSelection.h"
 
-// #include "MenuPresetEdit.h"
 #include "MenuPresetDisplay.h"
 #include "MenuSettingSelection.h"
 #include "../MenuManager.h"
 #include "../../io/DisplayManager.h"
 #include "../../data/PresetManager.h"
 
-MenuPresetSelection::MenuPresetSelection(const ConfirmAction& confirmAction) : CONFIRM_ACTION(confirmAction) {
+MenuPresetSelection::MenuPresetSelection() {
 	index = 0;
+	
 	presets[0] = PresetManager::readPreset(index - 1);
 	presets[1] = PresetManager::readPreset(index);
 	presets[2] = PresetManager::readPreset(index + 1);
 	
-	switch(CONFIRM_ACTION) {
-		case ConfirmAction::MENU_DISPLAY:
-			DisplayManager::output(F(" <    Presets     > "), 0);
-			break;
-			
-		case ConfirmAction::MENU_EDIT:
-			DisplayManager::output(F("   Select Preset    "), 0);
-			break;
-	}
+	DisplayManager::output(F(" <    Presets     > "), 0);
 	
 	if(presets[1]) {
 		DisplayManager::setCursor(2, 0);
@@ -75,17 +67,8 @@ void MenuPresetSelection::loop(const Button::State& buttonStateUp, const Button:
 	else if(buttonStateConfirm == Button::State::RISING_EDGE) {
 		if(presets[1]) {
 			Preset* p = new Preset(*presets[1]);
-			switch(CONFIRM_ACTION) {
-				case ConfirmAction::MENU_DISPLAY:
-					delete this;
-					MenuManager::menu = new MenuPresetDisplay(p);
-					break;
-				
-				case ConfirmAction::MENU_EDIT:
-					// delete this;
-					// MenuManager::menu = new MenuPresetEdit(p, index);
-					break;
-			}
+			delete this;
+			MenuManager::menu = new MenuPresetDisplay(p);
 		}
 	}
 }

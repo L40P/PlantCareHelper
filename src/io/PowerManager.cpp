@@ -2,8 +2,8 @@
 
 #include "DisplayManager.h"
 #include "../Definitions.h"
-// #include "../data/PresetManager.h"
-// #include "../menu/MenuManager.h"
+#include "../data/PresetManager.h"
+#include "../menu/MenuManager.h"
 
 #include <Arduino.h>
 #include <avr/power.h>
@@ -18,12 +18,13 @@ namespace {
 	}
 	
 	void sleep() {
-		Serial.println(F("Sleeping..."));
 		digitalWrite(PIN_LED_STATUS, LOW);
 		
-		// MenuManager::sleep();
+		MenuManager::sleep();
 		DisplayManager::sleep();
-		// PresetManager::sleep();
+		PresetManager::sleep();
+		
+		Serial.println(F("PowerManager sleeping"));
 		
 		Serial.flush(); // let serial finish transmission
 		
@@ -45,11 +46,11 @@ namespace {
 		power_twi_enable(); // needed for driving the display
 		power_usart0_enable(); // needed for serial communication
 		
-		// PresetManager::wakeUp();
+		PresetManager::wakeUp();
 		DisplayManager::wakeUp();
-		// MenuManager::wakeUp();
+		MenuManager::wakeUp();
 		
-		Serial.println(F("Woke up..."));
+		Serial.println(F("woke up PowerManager"));
 		digitalWrite(PIN_LED_STATUS, HIGH);
 		
 		PowerManager::extend();
@@ -68,6 +69,8 @@ void PowerManager::setup() {
 	power_timer2_disable();
 	
 	extend();
+	
+	Serial.println(F("set up PowerManager"));
 }
 
 void PowerManager::loop() {

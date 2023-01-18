@@ -1,24 +1,28 @@
 #include "Button.h"
 
-#include "../Definitions.h"
-
 #include <Arduino.h>
 
-#define BUTTON_PRESSED LOW
-#define BUTTON_RELEASED HIGH
-
-Button::Button(const int& pin) : PIN(pin) {
-	pinMode(PIN, INPUT_PULLUP);
+Button::Button(int pin) : Button(pin, true) {
 	
-	previousBounceMillis = millis();
-	char reading = digitalRead(PIN);
-	previousBounceReading = reading;
-	state = reading ? State::RELEASED : State::PRESSED;
 }
 
-const Button::State& Button::loop() {
+Button::Button(int pin, bool pullup) : PIN(pin), READING_RELEASED(pullup ? HIGH : LOW), READING_PRESSED(pullup ? LOW : HIGH) {
+	pinMode(PIN, pullup ? INPUT_PULLUP : INPUT);
+	digitalWrite(PIN, READING_RELEASED);
+	
+	previousBounceReading = READING_RELEASED;
+	previousReading = READING_RELEASED;
+	currentReading = READING_RELEASED;
+	
+	previousBounceMillis = millis();
+}
+
+Button::State Button::loop() {
+	// save previous reading
+	previousReading = currentReading;
+	
 	// read
-	char reading = digitalRead(PIN);
+	int reading = digitalRead(PIN);
 	
 	// if reading changed from previous bounce reading, this is a new bounce
 	if(reading != previousBounceReading) {
@@ -27,48 +31,53 @@ const Button::State& Button::loop() {
 	}
 	// else this is a potentially stable reading
 	// if the time since the last bounce is greater than the set threshold for bounces, this is a stable reading
-	else if((millis() - previousBounceMillis) > BUTTON_DEBOUNCE_MILLIS) {
-		if(state == State::FALLING_EDGE && reading == BUTTON_RELEASED) {
-			state = State::RELEASED;
-		}
-		else if(state == State::RISING_EDGE && reading == BUTTON_PRESSED) {
-			state = State::PRESSED;
-		}
-		else if((state == State::RELEASED || state == State::FALLING_EDGE) && reading == BUTTON_PRESSED) {
-			state = State::RISING_EDGE;
-		}
-		else if((state == State::PRESSED || state == State::RISING_EDGE) && reading == BUTTON_RELEASED) {
-			state = State::FALLING_EDGE;
-		}
+	else if( (millis() - previousBounceMillis) > debounceMillis ) {
+		currentReading = reading;
 	}
 	
+	updateState();
 	return state;
 }
 
-const Button::State& Button::getState() const {
+Button::State Button::getState() {
 	return state;
 }
 
-bool Button::checkState(const State& state) const {
-	return this->state == state;
+bool Button::checkState(State state) {
+	return getState() == state;
 }
 
-bool Button::isReleased() const {
-	return state == State::RELEASED;
+void Button::updateState() {
+	if(previousReading == READING_RELEASED && currentReading == READING_RELEASED) {
+		state = State::RELEASED;
+	}
+	else if(previousReading == READING_PRESSED && currentReading == READING_PRESSED) {
+		state = State::PRESSED;
+	}
+	else if(previousReading == READING_RELEASED && currentReading == READING_PRESSED) {
+		state = State::RISING_EDGE;
+	}
+	else if(previousReading == READING_PRESSED && currentReading == READING_RELEASED) {
+		state = State::FALLING_EDGE;
+	}
 }
 
-bool Button::isPressed() const {
-	return state == State::PRESSED;
+bool Button::isReleased() {
+	return checkState(State::RELEASED);
 }
 
-bool Button::hasRisingEdge() const {
-	return state == State::RISING_EDGE;
+bool Button::isPressed() {
+	return checkState(State::PRESSED);
 }
 
-bool Button::hasFallingEdge() const {
-	return state == State::FALLING_EDGE;
+bool Button::hasRisingEdge() {
+	return checkState(State::RISING_EDGE);
 }
 
-bool Button::hasEdge() const {
-	return state == State::RISING_EDGE || state == State::FALLING_EDGE;
+bool Button::hasFallingEdge() {
+	return checkState(State::FALLING_EDGE);
+}
+
+bool Button::hasEdge() {
+	return hasRisingEdge() || hasFallingEdge();
 }

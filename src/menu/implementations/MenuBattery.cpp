@@ -3,7 +3,7 @@
 #include "MenuPresetSelection.h"
 #include "../MenuManager.h"
 #include "../../Definitions.h"
-// #include "../../data/SettingManager.h"
+#include "../../data/SettingManager.h"
 #include "../../io/DisplayManager.h"
 
 #include <Arduino_AVRSTL.h>
@@ -19,10 +19,8 @@ MenuBattery::MenuBattery() {
 	pinMode(PIN_BATTERY, INPUT);
 	
 	float voltage = analogRead(PIN_BATTERY);
-	// float min = SettingManager::batteryMinimum.get();
-	// float max = SettingManager::batteryMaximum.get();
-	float min = 0;
-	float max = 1023;
+	float min = SettingManager::batteryMinimum.get();
+	float max = SettingManager::batteryMaximum.get();
 	float length = 15;
 	
 	int n = (voltage - min) * length / (max - min);
@@ -39,6 +37,6 @@ MenuBattery::~MenuBattery() {
 void MenuBattery::loop(const Button::State& buttonStateUp, const Button::State& buttonStateDown, const Button::State& buttonStateLeft, const Button::State& buttonStateRight, const Button::State& buttonStateConfirm) {
 	if(buttonStateConfirm == Button::State::RISING_EDGE) {
 		delete this;
-		MenuManager::menu = new MenuPresetSelection(MenuPresetSelection::ConfirmAction::MENU_DISPLAY);
+		MenuManager::menu = new MenuPresetSelection();
 	}
 }

@@ -3,31 +3,42 @@
 
 class Button {
 public:
-	Button(const int& pin);
+	Button() = delete;
+	Button(int pin);
+	Button(int pin, bool pullup);
 	
-	enum class State : char {
+	enum class State {
 		RELEASED,
 		PRESSED,
 		RISING_EDGE,
 		FALLING_EDGE,
 	};
 	
-	const State& loop();
-	const State& getState() const;
+	unsigned long debounceMillis = 50;
+	State loop();
 	
-	bool checkState(const State& state) const;
-	bool isReleased() const;
-	bool isPressed() const;
-	bool hasRisingEdge() const;
-	bool hasFallingEdge() const;
-	bool hasEdge() const;
+	State getState();
+	bool checkState(State state);
+	
+	bool isReleased();
+	bool isPressed();
+	bool hasRisingEdge();
+	bool hasFallingEdge();
+	bool hasEdge();
 	
 private:
-	const char PIN;
+	const int PIN;
+	const int READING_RELEASED;
+	const int READING_PRESSED;
 	
 	unsigned long previousBounceMillis;
-	char previousBounceReading;
-	State state;
+	
+	int previousBounceReading;
+	int previousReading;
+	int currentReading;
+	
+	State state = State::RELEASED;
+	void updateState();
 };
 
 #endif

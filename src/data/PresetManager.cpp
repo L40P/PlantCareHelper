@@ -125,6 +125,8 @@ void PresetManager::setup() {
 	digitalWrite(PIN_EEPROM_SCK, LOW);
 	digitalWrite(PIN_EEPROM_SI, LOW);
 	
+	Serial.println(F("set up PresetManager"));
+	
 	wakeUp();
 }
 
@@ -136,6 +138,8 @@ void PresetManager::sleep() {
 	sendByte(INSTRUCTION_DEEP_POWER_DOWN);
 	
 	deselect();
+	
+	Serial.println(F("PresetManager sleeping"));
 }
 
 void PresetManager::wakeUp() {
@@ -144,6 +148,8 @@ void PresetManager::wakeUp() {
 	sendByte(INSTRUCTION_RELEASE_DEEP_POWER_DOWN_READ_ELECTRONIC_SIGNATURE);
 	
 	deselect();
+	
+	Serial.println(F("woke up PresetManager"));
 }
 
 Preset* PresetManager::readPreset(const unsigned int& index) {

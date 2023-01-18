@@ -3,12 +3,9 @@
 #include "MenuPresetSelection.h"
 #include "../MenuManager.h"
 #include "../../Definitions.h"
-// #include "../../data/SettingManager.h"
+#include "../../data/SettingManager.h"
 #include "../../io/DisplayManager.h"
 #include "../../io/StringHelper.h"
-
-#include <Arduino_AVRSTL.h>
-#include <string>
 
 #define ERROR_VALUE -1
 
@@ -47,7 +44,7 @@ MenuPresetDisplay::~MenuPresetDisplay() {
 void MenuPresetDisplay::loop(const Button::State& buttonStateUp, const Button::State& buttonStateDown, const Button::State& buttonStateLeft, const Button::State& buttonStateRight, const Button::State& buttonStateConfirm) {
 	if(buttonStateConfirm == Button::State::RISING_EDGE) {
 		delete this;
-		MenuManager::menu = new MenuPresetSelection(MenuPresetSelection::ConfirmAction::MENU_DISPLAY);
+		MenuManager::menu = new MenuPresetSelection();
 	}
 	else if(millis() > millisNextSample) {
 		char moisture;
@@ -69,17 +66,14 @@ void MenuPresetDisplay::sampleSoil(char& moisture) {
 	analogRead(PIN_HIGH);
 	int sample2 = analogRead(PIN_SOIL);
 	
-	// if(abs(sample2 - sample1) > SettingManager::moistureSampleThreshold.get()) {
-	if(abs(sample2 - sample1) > 10) {
+	if(abs(sample2 - sample1) > SettingManager::moistureSampleThreshold.get()) {
 		Serial.println(F("failed to sample soil"));
 		moisture = ERROR_VALUE;
 	}
 	else {
 		float sample = sample2;
-		// float min = SettingManager::moistureMin.get();
-		// float max = SettingManager::moistureMax.get();
-		float min = 0.0f;
-		float max = 1023.0f;
+		float min = SettingManager::moistureMin.get();
+		float max = SettingManager::moistureMax.get();
 		float scale = 10.0f;
 		moisture = (char) ((sample - min) / (max - min) * scale);
 	}
@@ -97,8 +91,7 @@ void MenuPresetDisplay::sampleAir(char& temperature, char& humidity) {
 		humidity = ERROR_VALUE;
 	}
 	else {
-		// temperature = (char) T + SettingManager::temperatureOffset.get();
-		temperature = (char) T;
+		temperature = (char) T + SettingManager::temperatureOffset.get();
 		humidity = (char) H;
 	}
 }

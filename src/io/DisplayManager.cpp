@@ -125,15 +125,21 @@ void DisplayManager::setup() {
 		0b00000,
 	};
 	lcd.createChar((byte) 7, customCharacter7);
+	
+	Serial.println(F("set up DisplayManager"));
 }
 
 void DisplayManager::sleep() {
 	lcd.noBacklight();
 	clear();
+	
+	Serial.println(F("DisplayManager sleeping"));
 }
 
 void DisplayManager::wakeUp() {
 	lcd.backlight();
+	
+	Serial.println(F("woke up DisplayManager"));
 }
 
 void DisplayManager::clear() {

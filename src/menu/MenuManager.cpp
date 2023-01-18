@@ -3,7 +3,6 @@
 #include "implementations/MenuBattery.h"
 #include "../Definitions.h"
 #include "../io/Button.h"
-#include "../io/DisplayManager.h"
 #include "../io/PowerManager.h"
 
 namespace {
@@ -17,6 +16,8 @@ namespace {
 Menu* MenuManager::menu = nullptr;
 
 void MenuManager::setup() {
+	Serial.println(F("set up MenuManager"));
+	
 	wakeUp();
 }
 
@@ -39,6 +40,8 @@ void MenuManager::loop() {
 void MenuManager::sleep() {
 	delete menu;
 	menu = nullptr;
+	
+	Serial.println(F("MenuManager sleeping"));
 }
 
 void MenuManager::wakeUp() {
@@ -49,4 +52,6 @@ void MenuManager::wakeUp() {
 	buttonConfirm.loop();
 	
 	menu = new MenuBattery();
+	
+	Serial.println(F("woke up MenuManager"));
 }

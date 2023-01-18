@@ -19,7 +19,6 @@ public:
 	
 	static Preset* fromBytes(const unsigned char* bytes);
 	static unsigned char* toBytes(const Preset* preset);
-	static const std::string toString(const Preset* preset);
 	
 	std::string name;
 	char humidityMin;

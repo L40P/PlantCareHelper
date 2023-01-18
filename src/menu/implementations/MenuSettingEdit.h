@@ -4,9 +4,6 @@
 #include "../Menu.h"
 #include "../../data/Setting.h"
 
-#include <Arduino_AVRSTL.h>
-#include <string>
-
 template <typename T>
 class MenuSettingEdit : public Menu {
 public:

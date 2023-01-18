@@ -5,9 +5,6 @@
 #include "../../data/Preset.h"
 #include "../../UniversalDHT/UniversalDHT.h"
 
-#include <Arduino_AVRSTL.h>
-#include <string>
-
 class MenuPresetDisplay : public Menu {
 public:
 	MenuPresetDisplay(Preset* preset);
