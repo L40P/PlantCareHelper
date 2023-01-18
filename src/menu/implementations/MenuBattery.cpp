@@ -1,7 +1,6 @@
 #include "MenuBattery.h"
 
-// #include "MenuPresetSelection.h"
-#include "MenuA.h"
+#include "MenuPresetSelection.h"
 #include "../MenuManager.h"
 #include "../../Definitions.h"
 // #include "../../data/SettingManager.h"
@@ -40,7 +39,6 @@ MenuBattery::~MenuBattery() {
 void MenuBattery::loop(const Button::State& buttonStateUp, const Button::State& buttonStateDown, const Button::State& buttonStateLeft, const Button::State& buttonStateRight, const Button::State& buttonStateConfirm) {
 	if(buttonStateConfirm == Button::State::RISING_EDGE) {
 		delete this;
-		// menu = new MenuPresetSelection(MenuPresetSelection::ConfirmAction::MENU_DISPLAY);
-		MenuManager::menu = new MenuA();
+		MenuManager::menu = new MenuPresetSelection(MenuPresetSelection::ConfirmAction::MENU_DISPLAY);
 	}
 }

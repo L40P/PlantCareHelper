@@ -1,6 +1,6 @@
 
 #include "Definitions.h"
-// #include "data/PresetManager.h"
+#include "data/PresetManager.h"
 #include "io/DisplayManager.h"
 #include "io/PowerManager.h"
 #include "menu/MenuManager.h"
@@ -8,8 +8,8 @@
 void setup() {
 	Serial.begin(SERIAL_BAUD_RATE);
 	
-	// PresetManager::setup();
-	// _println("preset")
+	PresetManager::setup();
+	_println("preset")
 	
 	DisplayManager::setup();
 	_println("display")
